@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="clientOrderDAO">
+
+<select id="getcount" resultType="int">
+		select count(payno) from pay where id=#{id}
+</select>
+
+<select id="orderList" resultType="cart">
+	select id, pno, cno, pname, pcount, price from cart
+	where id=#{id} and cno=#{cno}
+</select>
+
+<select id="memberInfo" resultType="member">
+    select id, name, hp, postcode, addr1, addr2, mcode from member
+    where id=#{id}
+</select>
+
+<insert id="orderInsert" parameterType="order" useGeneratedKeys="false" keyProperty="payno">
+    insert into orderherb (payno, id, oname, ohp, pno, pname, pcount, price, dprice, opostcode, oaddr1, oaddr2, mcode)
+    values (#{payno}, #{id}, #{oname}, #{ohp}, #{pno}, #{pname}, #{pcount}, #{price}, #{dprice}, #{opostcode}, #{oaddr1}, #{oaddr2}, #{mcode} )
+</insert>
+
+<insert id="payInsert" parameterType="order">
+    insert into pay (payno, id, product, totalprice)
+    values (#{payno}, #{id}, #{pname}, #{totalprice} )
+</insert>
+
+<delete id="cartDelete">
+    delete from cart where pno = #{pno} and id=#{id}
+</delete>
+
+<select id="myOrder" resultType="order">
+	select id, payno, product, totalprice, odate from pay
+	where id=#{id} order by payno desc
+</select>
+
+<select id="getMyOrderList" resultType="order">
+	select id, payno, product, totalprice, odate from pay
+	where id=#{id} order by payno desc
+	limit #{limit}
+	offset #{offset}
+</select>
+
+<select id="myOrderDetail" resultType="order">
+	select payno, ono, oname, odate, id, pname, pcount, price, opostcode, oaddr1, oaddr2, odate from orderherb
+	where id=#{id} and payno=#{payno}
+</select>
+
+<select id="adminAllOrderList" resultType="order">
+ <![CDATA[ 
+    select ono, odate, id, pname, pcount, price, totalprice, opostcode, oaddr1, oaddr2 
+    from orderherb where ono > 0 order by odate desc
+    limit #{pageStart}, #{perPageNum}
+   ]]>   
+</select>
+
+<delete id="deleteOrder">
+     delete from orderherb where payno = #{payno}
+</delete>
+
+<delete id="deletePay">
+     delete from pay where payno = #{payno}
+</delete>
+
+</mapper>

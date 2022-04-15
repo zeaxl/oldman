@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ClientIndexDAO">
+	
+    <select id="getNewPro" resultType="pro">
+			SELECT pname, ptype, price, img1, pno FROM product 
+			ORDER BY pno DESC LIMIT 3
+	</select>
+	
+	<select id="getRecomPro" resultType="pro">
+			SELECT pname, ptype, price, img1, pno FROM product
+			ORDER BY pname LIMIT 3
+	</select>
+	
+	<select id="getPopularPro" resultType="pro">
+<!-- 	SELECT oh.pname, sum(oh.pcount) as total FROM orderherb as oh inner join product as pro on oh.pno = pro.pno 
+    group by oh.pno order by sum(oh.pcount) desc limit 3; -->
+     SELECT oh.pno, oh.pname, pro.img1, pro.price  FROM orderherb as oh join product as pro on oh.pno = pro.pno group by oh.pno order by sum(oh.pcount) desc limit 3;
+	</select>
+
+
+</mapper>
+

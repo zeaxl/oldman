@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CashDAO">
+	
+	<select id="getCash" resultType="cash">
+	<![CDATA[	select*from orderherb ]]>
+	</select> 
+	
+	<select id="getSum" resultType="cash">
+	<![CDATA[SELECT  FORMAT(sum(dprice) , 0) as summ,  odate as date from orderherb ;]]>
+	</select> 
+	
+	<select id="getSumToday" resultType="cash">
+	<![CDATA[select FORMAT(sum(dprice) , 0) as summ , odate as date from orderherb where  odate like '%' #{dd} '%';]]>
+	</select> 
+	<select id="getSumMonth" resultType="cash">
+	<![CDATA[select FORMAT(sum(dprice) , 0) as summ , odate as date from orderherb where  odate like '%' #{month} '%';]]>
+	</select>
+	<select id="getSumYear" resultType="cash">
+	<![CDATA[select FORMAT(sum(dprice) , 0) as summ, odate as date from orderherb where  odate like '%' #{year} '%';]]>
+	</select> 
+	
+	<select id="getSumListPie" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount
+    FROM orderherb where  odate like '%2022%'
+    group by pname order by pcount
+)
+
+SELECT pname, pcount,
+       (ROUND(100.0*pcount / SUM(pcount) OVER(), 2)) as sum,
+       ROUND(100.0*SUM(pcount) OVER(ORDER BY pcount DESC)
+             / SUM(pcount) OVER(), 2) as cum_ratio 
+FROM total_sales limit 4;
+]]>
+	</select>
+	
+<select id="getSumListPieDay" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount
+    FROM orderherb where  odate like  '%' #{dd} '%'
+    group by pname order by pcount
+)
+
+SELECT pname, pcount,
+       (ROUND(100.0*pcount / SUM(pcount) OVER(), 2)) as sum,
+       ROUND(100.0*SUM(pcount) OVER(ORDER BY pcount DESC)
+             / SUM(pcount) OVER(), 2) as cum_ratio 
+FROM total_sales limit 4;
+]]>
+	</select>
+<select id="getSumListBarDay" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+    SELECT ifnull(sum(dprice),0) as sum,mcode
+    FROM orderherb where  odate like '%' #{dd} '%'
+    group by mcode order by pcount
+)
+
+SELECT sum,mcode
+FROM total_sales where mcode ='d' or mcode='s'  order by mcode desc;
+]]>
+	</select>
+<select id="getSumListBarWeek" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+   SELECT ifnull(sum(dprice),0) as sum,mcode
+    FROM orderherb where  odate BETWEEN #{week} AND #{dd}
+    group by mcode order by pcount
+)
+
+SELECT sum,mcode
+FROM total_sales where mcode ='d' or mcode='s' order by mcode desc;
+]]>
+	</select>
+<select id="getSumListBarMonth" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+  SELECT ifnull(sum(dprice),0) as sum,mcode
+    FROM orderherb where  odate like '%' #{month} '%'
+    group by mcode order by pcount
+)
+
+SELECT sum,mcode
+FROM total_sales where mcode ='d' or mcode='s' order by mcode desc;
+]]>
+	</select>	
+<select id="getSumListPieMonth" resultType="cash">
+	<![CDATA[
+WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount
+    FROM orderherb where  odate like '%' #{month} '%'
+    group by pname order by pcount
+)
+
+SELECT pname, pcount,
+       (ROUND(100.0*pcount / SUM(pcount) OVER(), 2)) as sum,
+       ROUND(100.0*SUM(pcount) OVER(ORDER BY pcount DESC)
+             / SUM(pcount) OVER(), 2) as cum_ratio 
+FROM total_sales limit 4;
+]]>
+	</select>	
+	
+	<select id="getSumListRank" resultType="cash">
+	<![CDATA[select sum(pcount) as sum ,pname,odate as date from orderherb where  odate like '%' #{month} '%' group by pname order by sum desc limit 5;]]>
+	</select>
+	<select id="getSumListRankD" resultType="cash">
+	<![CDATA[select sum(pcount) as sum ,pname,odate as date from orderherb where  odate like '%' #{month} '%' group by pname order by sum asc limit 5;]]>
+	</select>
+	
+	<select id="getSumListMonth" resultType="cash">
+	<![CDATA[WITH Jan AS
+( 
+  select ifnull(sum(dprice),0) as jan from orderherb where  odate like '%' #{jan} '%'
+), 
+Feb AS 
+(
+ select ifnull(sum(dprice),0) as feb from orderherb where  odate like '%' #{feb} '%'
+),
+Mar AS 
+(
+ select ifnull(sum(dprice),0) as mar  from orderherb where  odate like '%' #{mar} '%'
+),
+Apr AS 
+(
+ select ifnull(sum(dprice),0) as apr from orderherb where  odate like '%' #{apr} '%'
+),
+May AS 
+(
+ select ifnull(sum(dprice),0) as may from orderherb where  odate like '%' #{may} '%'
+),
+Jun AS 
+(
+ select ifnull(sum(dprice),0) as jun from orderherb where  odate like '%' #{jun} '%'
+),
+Jul AS 
+(
+ select ifnull(sum(dprice),0) as jul from orderherb where  odate like '%' #{jul} '%'
+),
+Aug AS 
+(
+ select ifnull(sum(dprice),0) as aug from orderherb where  odate like '%' #{aug} '%'
+),
+Sep AS 
+(
+ select ifnull(sum(dprice),0) as sep from orderherb where  odate like '%' #{sep} '%'
+),
+Oct AS 
+(
+ select ifnull(sum(dprice),0) as oct from orderherb where  odate like '%' #{oct} '%'
+),
+Nov AS 
+(
+ select ifnull(sum(dprice),0) as nov from orderherb where  odate like '%' #{nov} '%'
+),
+Dece AS 
+(
+ select ifnull(sum(dprice),0) as dece from orderherb where  odate like '%' #{dece} '%'
+)
+
+select*from Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dece ;]]>
+	
+	</select> 
+<select id="getSumListYear" resultType="cash">
+	<![CDATA[WITH One AS
+( 
+  select ifnull(sum(dprice),0) as oneyear from orderherb where  odate like #{oneyear} '%'
+), 
+Two AS 
+(
+ select ifnull(sum(dprice),0) as twoyear from orderherb where  odate like #{twoyear} '%'
+),
+Three AS 
+(
+ select ifnull(sum(dprice),0) as threeyear from orderherb where  odate like #{threeyear} '%'
+),
+Four AS 
+(
+ select ifnull(sum(dprice),0) as fouryear from orderherb where  odate like #{fouryear} '%'
+),
+Five AS 
+(
+ select ifnull(sum(dprice),0) as fiveyear from orderherb where  odate like #{fiveyear} '%'
+)
+select*from One,Two,Three,Four,Five;]]>
+	</select> 
+
+<select id="getSumListDay" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-03-01" AND "2022-03-30" group by odate;]]>
+	</select> 	
+<select id="getSumListMonth1" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-01-01" AND "2022-01-30" group by odate;]]>
+	</select>
+<select id="getSumListMonth2" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-02-01" AND "2022-02-30" group by odate;]]>
+	</select>
+<select id="getSumListMonth4" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-04-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth5" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-05-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth6" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-06-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth7" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-07-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth8" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-08-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth9" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-09-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth10" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-10-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth11" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-11-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth12" resultType="cash">
+	<![CDATA[SELECT 
+     sum(a.dprice) as sum
+    ,ifnull(a.odate,0) as date
+   ,b.odate as odate
+  FROM date AS b
+  LEFT OUTER JOIN orderherb AS a
+ ON a.odate = b.odate WHERE b.odate BETWEEN "2022-12-01" AND #{dd} group by odate; ]]>
+	</select>
+<select id="getSumListMonth20" resultType="cash">
+	<![CDATA[WITH Jan AS
+( 
+  select ifnull(sum(dprice),0) as jan from orderherb where  odate like '%' #{jan} '%'
+), 
+Feb AS 
+(
+ select ifnull(sum(dprice),0) as feb from orderherb where  odate like '%' #{feb} '%'
+),
+Mar AS 
+(
+ select ifnull(sum(dprice),0) as mar  from orderherb where  odate like '%' #{mar} '%'
+),
+Apr AS 
+(
+ select ifnull(sum(dprice),0) as apr from orderherb where  odate like '%' #{apr} '%'
+),
+May AS 
+(
+ select ifnull(sum(dprice),0) as may from orderherb where  odate like '%' #{may} '%'
+),
+Jun AS 
+(
+ select ifnull(sum(dprice),0) as jun from orderherb where  odate like '%' #{jun} '%'
+),
+Jul AS 
+(
+ select ifnull(sum(dprice),0) as jul from orderherb where  odate like '%' #{jul} '%'
+),
+Aug AS 
+(
+ select ifnull(sum(dprice),0) as aug from orderherb where  odate like '%' #{aug} '%'
+),
+Sep AS 
+(
+ select ifnull(sum(dprice),0) as sep from orderherb where  odate like '%' #{sep} '%'
+),
+Oct AS 
+(
+ select ifnull(sum(dprice),0) as oct from orderherb where  odate like '%' #{oct} '%'
+),
+Nov AS 
+(
+ select ifnull(sum(dprice),0) as nov from orderherb where  odate like '%' #{nov} '%'
+),
+Dece AS 
+(
+ select ifnull(sum(dprice),0) as dece from orderherb where  odate like '%' #{dece} '%'
+)
+
+select*from Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dece ;]]>
+	
+	</select> 
+<select id="getSumListMonth21" resultType="cash">
+	<![CDATA[WITH Jan AS
+( 
+  select ifnull(sum(dprice),0) as jan from orderherb where  odate like '%' #{jan} '%'
+), 
+Feb AS 
+(
+ select ifnull(sum(dprice),0) as feb from orderherb where  odate like '%' #{feb} '%'
+),
+Mar AS 
+(
+ select ifnull(sum(dprice),0) as mar  from orderherb where  odate like '%' #{mar} '%'
+),
+Apr AS 
+(
+ select ifnull(sum(dprice),0) as apr from orderherb where  odate like '%' #{apr} '%'
+),
+May AS 
+(
+ select ifnull(sum(dprice),0) as may from orderherb where  odate like '%' #{may} '%'
+),
+Jun AS 
+(
+ select ifnull(sum(dprice),0) as jun from orderherb where  odate like '%' #{jun} '%'
+),
+Jul AS 
+(
+ select ifnull(sum(dprice),0) as jul from orderherb where  odate like '%' #{jul} '%'
+),
+Aug AS 
+(
+ select ifnull(sum(dprice),0) as aug from orderherb where  odate like '%' #{aug} '%'
+),
+Sep AS 
+(
+ select ifnull(sum(dprice),0) as sep from orderherb where  odate like '%' #{sep} '%'
+),
+Oct AS 
+(
+ select ifnull(sum(dprice),0) as oct from orderherb where  odate like '%' #{oct} '%'
+),
+Nov AS 
+(
+ select ifnull(sum(dprice),0) as nov from orderherb where  odate like '%' #{nov} '%'
+),
+Dece AS 
+(
+ select ifnull(sum(dprice),0) as dece from orderherb where  odate like '%' #{dece} '%'
+)
+
+select*from Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dece ;]]>
+	
+	</select> 	
+</mapper>
+

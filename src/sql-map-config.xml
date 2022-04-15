@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- Alia 설정 -->
+	<typeAliases>
+		<typeAlias alias="member" type="org.ko.kherb.vo.MemberVO" />
+		<typeAlias alias="order" type="org.ko.kherb.vo.OrderVO" />
+		<typeAlias alias="pro" type="org.ko.kherb.vo.ProductVO" />
+		<typeAlias alias="cash" type="org.ko.kherb.vo.AdminChartVO" />
+		<typeAlias alias="cart" type="org.ko.kherb.vo.CartVO" />
+		<typeAlias alias="sale" type="org.ko.kherb.vo.AdminSaleVO" />
+	</typeAliases>
+	
+	<!-- Sql Mapper 설정 -->
+	<mappers>
+		<mapper resource="mappings/clientLogin-mapping.xml" />
+		<mapper resource="mappings/clientMember-mapping.xml" />
+		<mapper resource="mappings/clientProduct-mapping.xml" />
+		<mapper resource="mappings/clientOrder-mapping.xml" />
+		<mapper resource="mappings/clientCart-mapping.xml" />
+		<mapper resource="mappings/adminMember-mapping.xml" />
+		<mapper resource="mappings/adminchart-mapping.xml" />
+		<mapper resource="mappings/adminProduct-mapping.xml" />
+		<mapper resource="mappings/adminOrder-mapping.xml" />
+		<mapper resource="mappings/adminsale-mapping.xml" />
+		<mapper resource="mappings/clientIndex-mapping.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SaleDAO">
+	
+	<select id="getSale" resultType="sale">
+	<![CDATA[WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount ,pno, FORMAT(sum(dprice), 0) as price
+    FROM orderherb where  odate like '%2022%'
+    group by pname 
+)
+SELECT pname, pcount,price,pno,
+       concat(ROUND(100.0*pcount / SUM(pcount) OVER(), 2),'%') as sum     
+FROM total_sales  group by pname order by pno desc, sum desc LIMIT #{limit} OFFSET #{offset} ;
+]]>
+	</select> 
+	
+	<select id="getSaleSort" resultType="sale">
+	<![CDATA[WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount ,pno,FORMAT(sum(dprice), 0) as price,sum(dprice) as dprice
+    FROM orderherb where  odate like '%2022%'
+    group by pname 
+)
+SELECT pname, pcount,price,pno,dprice,
+       concat(ROUND(100.0*pcount / SUM(pcount) OVER(), 2),'%') as sum     
+FROM total_sales 
+]]> <if test="sort =='ALL'">
+   group by pname order by pcount desc, dprice desc LIMIT #{limit} OFFSET #{offset} ;
+  </if>
+ <if test="sort =='new'">
+   group by pname order by pno desc, dprice desc LIMIT #{limit} OFFSET #{offset} ;
+  </if>
+  <if test="sort =='high'">
+   group by pname order by dprice desc , sum desc LIMIT #{limit} OFFSET #{offset} ;
+  </if>
+  <if test="sort =='low'">
+   group by pname order by dprice asc, sum desc LIMIT #{limit} OFFSET #{offset} ;
+  </if>
+	</select> 
+	
+
+	<select id="getSaleSearch" resultType="sale">
+	 WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount ,pno, FORMAT(sum(price), 0) as price
+    FROM orderherb where  odate like '%2022%'
+    group by pname order by pcount desc
+)
+SELECT pname, pcount,price,pno,
+       concat(ROUND(100.0*pcount / SUM(pcount) OVER(), 2),'%') as sum      
+FROM total_sales where
+ 
+  <if test="title =='pno'">
+    pno like '%' #{content} '%' group by pname order by pcount desc ;
+  </if>
+   <if test="title =='pname'">
+    pname like '%' #{content} '%' group by pname order by pcount desc ; 
+  </if>
+   <if test="title =='all'">
+   1=1 group by pname order by pcount desc LIMIT #{limit} OFFSET #{offset} ;
+  </if>
+ 
+  </select> 
+  
+  <select id="getSaleInfo" resultType="sale">
+	<![CDATA[select pname,FORMAT(dprice, 0) as price,pcount,pno,odate from orderherb where pname like '%' #{pname} '%'
+	and odate like'%2022%'
+	 order by odate desc,  dprice desc LIMIT #{limit} OFFSET #{offset}; 
+]]>
+	</select> 
+	<select id="getCount" resultType="int">
+		WITH total_sales AS(
+    SELECT pname,SUM(pcount) as pcount ,pno, FORMAT(sum(price), 0) as price
+    FROM orderherb where  odate like '%2022%'
+    group by pname order by pcount desc
+)
+select COUNT(*) from  total_sales;
+	</select>
+	<select id="getSaleInfoCount" resultType="int">
+		WITH total_sales AS(
+select pname,FORMAT(price, 0) as price,pcount,pno,odate from orderherb where pname like '%' #{pname} '%'
+	 order by pcount desc, price desc) select COUNT(*) from  total_sales;
+	</select>
+	
+</mapper>
+

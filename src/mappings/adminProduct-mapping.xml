@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminProductDAO">
+
+	<select id="getProductList" resultType="pro">
+		<if test='searchCondition == "_"'>
+			SELECT pno, ptype, pname, price, detail, img1, img2  FROM product WHERE pno LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pno DESC LIMIT #{limit} OFFSET #{offset}
+		</if>
+		<if test='searchCondition == "pno"'>
+			SELECT pno, ptype, pname, price, detail, img1, img2  FROM product WHERE pno LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pno DESC LIMIT #{limit} OFFSET #{offset}
+		</if>
+		<if test='searchCondition == "pname"'>
+			SELECT pno, ptype, pname, price, detail, img1, img2  FROM product WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pno DESC LIMIT #{limit} OFFSET #{offset}
+		</if>
+		<if test='searchCondition == "ptype"'>
+			SELECT pno, ptype, pname, price, detail, img1, img2  FROM product WHERE ptype LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pno DESC LIMIT #{limit} OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="int">
+		<if test='searchCondition == "_"'>
+			SELECT COUNT(*) FROM product WHERE pno like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='searchCondition == "pno"'>
+			SELECT COUNT(*) FROM product WHERE pno like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='searchCondition == "pname"'>
+			SELECT COUNT(*) FROM product WHERE pname like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='searchCondition == "ptype"'>
+			SELECT COUNT(*) FROM product WHERE ptype like concat('%',#{searchKeyword},'%')
+		</if>
+	</select>
+
+	<select id="getProductDetail" resultType="pro">
+		select pno, ptype, pname, price, detail, img1, img2 from product where pno=#{pno}
+	</select>
+
+	<update id="updateProduct">
+		update product set pname=#{pname}, ptype=#{ptype}, price=#{price},
+		detail=#{detail}, img1=#{img1}
+		where pno=#{pno}
+	</update>
+
+	<delete id="deleteProduct">
+		delete from product where pno=#{pno}
+	</delete>
+	
+	<select id="searchImg" resultType="pro">
+		select img1, img2 from product where pno=#{pno}
+	</select>
+	
+	<insert id="insertProduct" parameterType="pro">
+		insert into product (ptype, pname, price, detail, img1, img2)
+		values ( #{ptype}, #{pname}, #{price}, #{detail}, #{img1} )
+	</insert>
+</mapper>

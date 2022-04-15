@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="clientProductDAO">
+	
+	<select id="returnProductList" resultType="int">
+		<if test='ptype == "all"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+		
+			SELECT product.pno FROM product LEFT OUTER JOIN total ON product.pno = total.pno
+			<if test='order == "_"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pno"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pname"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname
+			</if>
+			<if test='order == "price"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price
+			</if>
+			<if test='order == "pnamed"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC
+			</if>
+			<if test='order == "priced"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC
+			</if>
+			<if test='order == "hot"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC
+			</if>
+		</if>
+		<if test='ptype == "raw"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+		
+			SELECT product.pno FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '원물'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC
+			</if>
+		</if>	
+		<if test='ptype == "tea"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+		
+			SELECT product.pno FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '액기스/티백'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC
+			</if>
+		</if>	
+		<if test='ptype == "pill"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+		
+			SELECT product.pno FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '환'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC
+			</if>
+		</if>	
+		<if test='ptype == "powder"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+		
+			SELECT product.pno FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '분말/가루'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC
+			</if>
+		</if>		
+	</select>
+	<select id="searchProductList" resultType="pro">
+		<if test='cate == "all"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+			
+			SELECT product.pno, ptype, pname, price, detail, img1, img2  FROM product LEFT OUTER JOIN total ON product.pno = total.pno
+			<if test='order == "_"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pno"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pname"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "price"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pnamed"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "priced"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "hot"'>
+				WHERE pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+		</if>
+		<if test='cate == "raw"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+			
+			SELECT product.pno, ptype, pname, price, detail, img1, img2  FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '원물'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+		</if>
+		<if test='cate == "tea"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+			
+			SELECT product.pno, ptype, pname, price, detail, img1, img2  FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '액기스/티백'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+		</if>
+		<if test='cate == "pill"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+			
+			SELECT product.pno, ptype, pname, price, detail, img1, img2  FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '환'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+		</if>
+		<if test='cate == "powder"'>
+			WITH total AS(SELECT pno, SUM(pcount) as pcount FROM orderherb group by pno order by pcount)
+			
+			SELECT product.pno, ptype, pname, price, detail, img1, img2  FROM product LEFT OUTER JOIN total ON product.pno = total.pno WHERE ptype = '분말/가루'
+			<if test='order == "_"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pno"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY product.pno DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pname"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "price"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "pnamed"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY pname DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "priced"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY price DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+			<if test='order == "hot"'>
+				AND pname LIKE CONCAT('%',#{searchKeyword},'%') ORDER BY total.pcount DESC LIMIT #{limit} OFFSET #{offset}
+			</if>
+		</if>
+	</select>
+	
+	<select id="selectCount" resultType="int">
+		<if test='ptype == "all"'>
+			SELECT COUNT(*) FROM product WHERE pname like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='ptype == "raw"'>
+			SELECT COUNT(*) FROM product WHERE ptype = '원물' AND pname like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='ptype == "tea"'>
+			SELECT COUNT(*) FROM product WHERE ptype = '액기스/티백' AND pname like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='ptype == "pill"'>
+			SELECT COUNT(*) FROM product WHERE ptype = '환' AND pname like concat('%',#{searchKeyword},'%')
+		</if>
+		<if test='ptype == "powder"'>
+			SELECT COUNT(*) FROM product WHERE ptype = '분말/가루' AND pname like concat('%',#{searchKeyword},'%')
+		</if>
+	</select>
+	
+	<select id="getProductDetail" parameterType="java.lang.Integer" resultType="pro">
+		SELECT pno, ptype, pname, price, detail, img1, img2  FROM product WHERE pno = #{pno}
+	</select>
+	
+</mapper>

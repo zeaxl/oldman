@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="loginDAO">
+	
+	<select id="getID" resultType="member">
+		SELECT id, name, email, mcode FROM member WHERE id=#{id} AND mcode=#{mcode}
+	</select> 
+	
+	<select id="getAdminID" resultType="member">
+		SELECT id, name FROM member WHERE id=#{id}
+	</select> 
+	
+	<select id="getMemberByEmail" resultType="int">
+		SELECT count(*) FROM member WHERE email=#{email}
+	</select>
+	
+	<select id="getMember" resultType="member">
+		SELECT id, name, email, mcode FROM member WHERE email=#{email}
+	</select>
+	
+	<select id="getPw" resultType="member">
+		SELECT pw, mcode FROM member WHERE ID=#{id}
+	</select>
+	
+	<select id="getCno" resultType="int">
+		SELECT cno FROM cart ORDER BY cno DESC LIMIT 1
+	</select>
+</mapper>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="clientMemberDAO">
+	
+	<select id="getMyInfo" resultType="member">
+		SELECT mno, id, name, email, hp, postcode, addr1, addr2, birth, mcode, sano, joindate, mimg
+		FROM member WHERE id=#{id}
+	</select> 
+	
+	<update id="updateMyInfo">
+		UPDATE member SET name=#{name}, email=#{email}, hp=#{hp}, postcode=#{postcode}, mimg=#{mimg},
+		addr1=#{addr1}, addr2=#{addr2}, birth=#{birth}, sano=#{sano}
+		WHERE id=#{id}
+	</update>
+	
+	<select id="getMyPw" resultType="member">
+<!-- 		SELECT id, name FROM member WHERE id=#{id} AND pw=#{pw} -->
+		SELECT pw FROM member WHERE id=#{id}
+	</select>
+	
+	<update id="updateMyPw">
+		UPDATE member SET pw=#{pw} WHERE id=#{id}
+	</update>
+	
+	<select id = "idCheckDAO" parameterType="member" resultType="Integer">
+		select count(*) from member where id = #{id}
+	</select>
+	
+	<select id = "emailAuthDAO" parameterType="member" resultType="Integer">
+		select count(*) from member where email = #{email}
+	</select>
+	
+	<insert id ="insertDAO" parameterType="member" >
+		insert into member (id, name, email, hp, postcode, addr1, addr2, pw, birth, mimg, mcode, sano, pass)
+		values(#{id}, #{name}, #{email}, #{hp}, #{postcode}, #{addr1},
+		 #{addr2}, #{pw}, #{birth}, #{mimg}, #{mcode},#{sano},#{pass})
+	</insert>
+		
+	<delete id="deleteMe">
+		DELETE FROM member WHERE id=#{id}
+	</delete>
+	
+	<select id="delDate" resultType="string">
+	<![CDATA[
+		SELECT DATE_ADD(odate, INTERVAL 7 DAY)>NOW() FROM pay WHERE id=#{id} ORDER BY odate DESC LIMIT 1
+	]]> 
+	</select>
+	<select id="getOrders" resultType="order">
+		SELECT payno, id, mcode, pno, pname, pcount, price, dprice, odate
+		FROM orderherb WHERE id=#{id}
+	</select>
+	
+	<insert id="insertBackup">
+		INSERT INTO PAYBACKUP(payno, id, mcode, pno, pname, pcount, price, dprice, odate)
+		VALUES(#{payno}, #{id}, #{mcode}, #{pno}, #{pname}, #{pcount}, #{price}, #{dprice}, #{odate})
+	</insert>
+	
+	<select id="getIdSearch" resultType="string">
+		SELECT id FROM member WHERE name=#{name} AND email=#{email}
+	</select>
+	<select id="getPwSearch" resultType="int">
+		SELECT COUNT(*) FROM member WHERE name=#{name} AND id=#{id} AND email=#{email}
+	</select>
+</mapper>
+

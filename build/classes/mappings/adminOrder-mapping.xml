@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="AdminOrderDAO">
+<select id="AdOrderList" resultType="order">
+	select  payno, odate, id, product, totalprice
+	from pay order by odate desc
+</select>
+
+<!-- 리스트 + 페이징 -->
+<select id="getAdOrderList" resultType="order">
+    select  payno, odate, id, product, totalprice
+	from pay order by odate desc
+	limit #{limit}
+	offset #{offset}
+</select>
+
+<select id="listPageSD" parameterType="hashMap" resultType="order">
+    select  payno, ono, odate, id, pname, pcount, price, opostcode, oaddr1, oaddr2 
+	from orderherb order by odate desc
+	limit #{displayPost}
+	offset #{postNum}
+</select>
+
+<select id="listPageSO" parameterType="hashMap" resultType="order">
+    select payno, ono, odate, id, pname, pcount, price, opostcode, oaddr1, oaddr2 
+	from orderherb order by ono desc
+	limit #{displayPost}
+	offset #{postNum}
+</select>
+
+<select id="count" resultType="int">
+		select count(payno) from orderherb
+</select>
+
+<select id="countP" resultType="int">
+		select count(payno) from pay
+</select>
+
+<select id="getSelectOrder"  resultType="order">
+		<![CDATA[SELECT PAYNO, ODATE, ID, PRODUCT, TOTALPRICE
+		FROM PAY WHERE ID != 'admin']]>
+		 
+		<if test='searchCondition == "id"'>
+		<![CDATA[AND ID LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		<if test = 'searchCondition == "payno"'>
+		<![CDATA[AND PAYNO LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		<![CDATA[ORDER BY ODATE DESC LIMIT #{limit} OFFSET #{offset};]]>
+	</select>
+
+<select id="allOrderDetail" resultType="order">
+	select payno, ono, oname, odate, id, pname, pcount, price, opostcode, oaddr1, oaddr2 from orderherb
+	where payno=#{payno}
+</select>
+
+<delete id="deleteOrder">
+     delete from orderherb where payno = #{payno}
+</delete>
+
+<delete id="deletePay">
+     delete from pay where payno = #{payno}
+</delete>
+
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminMemberDAO">
+	
+	<select id="getMemberList" resultType="member">
+		SELECT mno, id, name, birth, addr1, addr2, hp, joindate, pass, mcode
+		FROM member WHERE id != 'admin' ORDER BY mno desc
+		LIMIT #{limit}
+		OFFSET #{offset}
+	</select>
+	
+	<!-- 도,소매 리스트구분 -->
+	<select id="getCount1" resultType="int">
+		SELECT COUNT(*) FROM member WHERE mcode= 'D'
+	</select>
+	<select id="getCount2" resultType="int">
+		SELECT COUNT(*) FROM member WHERE mcode= 'S'
+	</select>
+	
+	<!-- 총 게시글 갯수 출력 -->
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int" >
+		<![CDATA[SELECT COUNT(*)-1 FROM member]]>
+		<where>	
+		
+		<if test='searchCondition == "id"'>
+		<![CDATA[AND id LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		<if test = 'searchCondition == "name"'>
+		<![CDATA[AND name LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		</where>
+	</select>
+	
+		<!-- 회원목록 검색 -->
+	<select id="getSelectMember"  resultType="member">
+		<![CDATA[SELECT mno, id, name, email, hp, postcode, addr1, addr2, pw, birth, mcode, joindate, sano, pass, mimg 
+		FROM member WHERE id != 'admin']]>
+		 
+		<if test='searchCondition == "id"'>
+		<![CDATA[AND id LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		<if test = 'searchCondition == "name"'>
+		<![CDATA[AND name LIKE CONCAT('%',#{searchKeyword},'%')]]>
+		</if>
+		
+		<![CDATA[ORDER BY mno DESC LIMIT #{limit} OFFSET #{offset};]]>
+	</select>
+	
+	<!-- 도매,소매구분 -->
+	<select id="getSelectMemberD" resultType="member">
+		SELECT * FROM member WHERE mcode = 'D' AND id != 'ADMIN' ORDER BY mno DESC
+		LIMIT #{limit}
+		OFFSET #{offset}
+	</select>
+	
+	<select id="getSelectMemberS" resultType="member">
+		SELECT * FROM member WHERE mcode = 'S' AND id != 'admin'ORDER BY mno DESC
+		LIMIT #{limit}
+		OFFSET #{offset}
+	</select>
+	
+	
+	<select id="getSelectMember_T" resultType="member">
+		SELECT * FROM member WHERE id != 'admin' AND id LIKE CONCAT('%',#{searchKeword},'%') ORDER BY mno desc
+	</select>
+	
+	<select id="getSelectMember_C" resultType="member">
+		SELECT * FROM member WHERE id != 'admin' AND name LIKE CONCAT('%',#{searchKeword},'%') ORDER BY mno desc
+	</select>
+	
+	
+	<!-- 회원 상세 -->
+	<select id="getMemberDetail" resultType="member">
+		SELECT  mno, id, name, birth, hp, mcode, pass, addr1, addr2, joindate, sano, mimg 
+		FROM member WHERE mno=#{mno} AND id != 'admin'
+	</select>
+		
+	<!-- 도,소매 상세 -->
+		<select id="getMemberDetail1" resultType="member">
+		SELECT mno, id, name, email, birth, hp, mcode, postcode, pass, addr1, addr2, joindate, sano, mimg 
+		FROM member WHERE mno=#{mno} AND id != 'admin'
+	</select>
+	
+	<!-- 회원 삭제 -->
+	<delete id="deleteMember">
+		DELETE FROM member WHERE mno=#{mno}
+	</delete>
+	
+		
+	<update id="updateMember">
+		UPDATE member SET name=#{name}, email=#{email}, hp=#{hp}, postcode=#{postcode}, mimg=#{mimg},
+		addr1=#{addr1}, addr2=#{addr2}, birth=#{birth}, sano=#{sano}
+		WHERE mno=#{mno}
+	</update>
+	
+	<!-- 사업자회원 승인 -->
+	<update id="passMember">
+		UPDATE member SET pass='T' WHERE mno=#{mno}
+	</update>
+	
+	<select id = "idCheckDAO" parameterType="member" resultType="Integer">
+		select count(*) from member where id = #{id}
+	</select>
+
+	<insert id ="insertDAO" parameterType="member" >
+		insert into member (id, name, email, hp, postcode, addr1, addr2, pw, birth, mimg, mcode, sano, pass)
+		values(#{id}, #{name}, #{email}, #{hp}, #{postcode}, #{addr1},
+ 		#{addr2}, #{pw}, #{birth}, #{mimg}, #{mcode},#{sano},#{pass})
+	</insert>
+	
+		<!-- 회원목록 ajax test
+	<select id="getDoMember" resultType="member">
+		SELECT mno, id, name, birth, addr1, addr2, hp, joindate, sano 
+		FROM member WHERE mcode=#{mcode} ORDER BY mno DESC
+	</select>
+	
+	<select id="getMemberListTest" resultType="member">
+		SELECT mno, id, name, birth, addr1, addr2, hp, joindate, sano 
+		FROM member ORDER BY mno DESC
+	</select>
+	 -->
+</mapper>
